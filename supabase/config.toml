@@ -1,0 +1,27 @@
+# Optional: only needed if you use the Supabase CLI (`supabase start`, `supabase db push`, `supabase config push`).
+# NOT verified against the CLI in this environment — if the CLI rejects a key, follow the dashboard steps in README.md instead.
+project_id = "examina"
+
+[auth]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true      # users must verify their email with a code
+double_confirm_changes = false   # "Secure email change" off → a single code to the NEW address
+secure_password_change = false
+otp_length = 6
+otp_expiry = 3600
+
+[auth.email.template.confirmation]
+subject = "Your EXAMINA verification code"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Your EXAMINA password reset code"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.email_change]
+subject = "Confirm your new EXAMINA email"
+content_path = "./supabase/templates/email_change.html"

@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 250 250 250; --surface: 255 255 255; --subtle: 244 244 245; --line: 228 228 231;
+  --fg: 24 24 27; --muted: 113 113 122;
+  --accent: 37 99 235; --accent-fg: 37 99 235;
+  --ok: 21 128 61; --warn: 180 83 9; --danger: 185 28 28;
+  color-scheme: light;
+}
+[data-theme='dark'] {
+  --bg: 9 9 11; --surface: 24 24 27; --subtle: 39 39 42; --line: 63 63 70;
+  --fg: 244 244 245; --muted: 161 161 170;
+  --ok: 74 222 128; --warn: 251 191 36; --danger: 248 113 113;
+  color-scheme: dark;
+}
+[data-accent='blue'] { --accent: 37 99 235; --accent-fg: 37 99 235; }
+[data-accent='purple'] { --accent: 124 58 237; --accent-fg: 124 58 237; }
+[data-accent='green'] { --accent: 21 128 61; --accent-fg: 21 128 61; }
+[data-accent='orange'] { --accent: 194 65 12; --accent-fg: 194 65 12; }
+[data-accent='pink'] { --accent: 190 24 93; --accent-fg: 190 24 93; }
+[data-accent='red'] { --accent: 185 28 28; --accent-fg: 185 28 28; }
+[data-accent='cyan'] { --accent: 14 116 144; --accent-fg: 14 116 144; }
+[data-theme='dark'][data-accent='blue'] { --accent-fg: 96 165 250; }
+[data-theme='dark'][data-accent='purple'] { --accent-fg: 167 139 250; }
+[data-theme='dark'][data-accent='green'] { --accent-fg: 74 222 128; }
+[data-theme='dark'][data-accent='orange'] { --accent-fg: 251 146 60; }
+[data-theme='dark'][data-accent='pink'] { --accent-fg: 244 114 182; }
+[data-theme='dark'][data-accent='red'] { --accent-fg: 248 113 113; }
+[data-theme='dark'][data-accent='cyan'] { --accent-fg: 34 211 238; }
+
+html, body, #root { height: 100%; }
+body { @apply bg-bg text-fg font-sans antialiased; -webkit-tap-highlight-color: transparent; overflow-wrap: anywhere; }
+/* Keep native controls from imposing an intrinsic minimum width inside flex/grid rows. */
+input, select, textarea { min-width: 0; max-width: 100%; }
+#root { isolation: isolate; }
+:focus-visible { outline: 2px solid rgb(var(--accent-fg)); outline-offset: 2px; }
+
+@layer components {
+  .btn { @apply inline-flex min-h-[40px] select-none items-center justify-center gap-2 whitespace-nowrap rounded-md px-3.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50; }
+  .btn-primary { @apply bg-accent text-white hover:brightness-110; }
+  .btn-secondary { @apply border border-line bg-surface hover:bg-subtle; }
+  .btn-ghost { @apply hover:bg-subtle; }
+  .btn-danger { @apply border border-danger/40 bg-danger/10 text-danger hover:bg-danger/20; }
+  .btn-sm { @apply min-h-[32px] px-2.5 text-xs; }
+  .input { @apply min-h-[40px] w-full rounded-md border border-line bg-surface px-3 text-sm placeholder:text-muted focus:border-accent; }
+  textarea.input { @apply py-2; }
+  .label { @apply mb-1 block text-sm font-medium; }
+  .card { @apply min-w-0 rounded-lg border border-line bg-surface; }
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium; }
+  .badge-neutral { @apply bg-subtle text-muted; }
+  .badge-accent { @apply bg-accent/10 text-accent-fg; }
+  .badge-ok { @apply bg-ok/10 text-ok; }
+  .badge-warn { @apply bg-warn/10 text-warn; }
+  .badge-danger { @apply bg-danger/10 text-danger; }
+  .th { @apply px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-muted; }
+  .td { @apply px-3 py-2.5 text-sm; }
+}
+
+dialog.modal { @apply m-auto max-h-[90dvh] w-[calc(100vw-1rem)] max-w-lg overflow-hidden rounded-xl border border-line bg-surface p-0 text-fg shadow-xl; }
+dialog.modal.wide { @apply max-w-3xl; }
+dialog.modal::backdrop { background: rgb(0 0 0 / 0.5); }
+/* Don't let the page scroll behind an open modal (iOS rubber-banding). */
+body:has(dialog.modal[open]) { overflow: hidden; }
+@media (max-width: 640px) {
+  .input, select.input { font-size: 16px; }
+  dialog.modal { @apply mb-0 w-screen max-w-none rounded-b-none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.8s linear infinite; }
+@media print { .no-print { display: none !important; } }
