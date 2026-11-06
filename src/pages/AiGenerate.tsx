@@ -63,7 +63,7 @@ export default function AiGenerate() {
             </div>
           </details>
           {error && <ErrorNote error={error} />}
-          <Button type="submit" variant="primary" loading={busy}><Sparkles className="h-4 w-4" />{busy ? 'Generating… this can take up to a minute' : 'Generate examination'}</Button>
+          <Button type="submit" variant="primary" loading={busy}><Sparkles className="h-4 w-4" />{busy ? 'Generating…' : 'Generate examination'}</Button>
         </Card>
       </form>
     </>
