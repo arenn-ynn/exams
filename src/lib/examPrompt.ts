@@ -4,11 +4,11 @@ export interface PromptOptions { count: number; difficulty: string; language: st
 
 /** The prompt users copy into ChatGPT / Claude / any AI after uploading their PDFs. */
 export function buildExternalPrompt(o: PromptOptions): string {
-  return `You are an expert exam author. I have attached one or more PDF documents. Create an examination from their content and return it as ONE JSON document that follows the EXAMINA schema (version ${SCHEMA_VERSION}) exactly.
+  return `You are an expert exam author. I have provided one or more source materials in any format (PDF, DOCX, DOC, TXT, Markdown, plain text, images, or other readable formats). Create an examination from their content and return it as ONE downloadable JSON file that follows the EXAMINA schema (version ${SCHEMA_VERSION}) exactly.
 
 TASK
-1. Read and analyse ALL attached PDF documents. Extract the relevant educational material (key concepts, definitions, facts, processes, relationships). Ignore tables of contents, page numbers, headers/footers and administrative text.
-2. Write exactly ${o.count} questions based ONLY on that material. Do not invent facts that are not supported by the documents.
+1. Read and analyse ALL provided source materials, regardless of their format. Extract the relevant educational material (key concepts, definitions, facts, processes, relationships). Ignore tables of contents, page numbers, headers/footers and administrative text.
+2. Write exactly ${o.count} questions based ONLY on that material. Do not invent facts that are not supported by the sources.
 3. Difficulty: ${o.difficulty}. ${o.difficulty === 'Mixed' ? 'Use a balanced mix of easy, medium and hard questions.' : ''}
 4. Language of the examination (title, description, questions, options): ${o.language}.
 5. Allowed question types (use ONLY these): ${o.types.join(', ')}.
@@ -23,15 +23,28 @@ QUESTION TYPES (the ONLY supported ones)
 Do NOT create true/false, short-answer, numerical, essay or fill-in-the-blank questions.
 
 JSON RULES
-- Output VALID JSON ONLY: no Markdown code fences, no commentary before or after, no comments, no trailing commas.
+- Generate an actual downloadable .json file. Do NOT return the JSON as plain text, Markdown, a code block, or any other format.
+- The file must contain VALID JSON ONLY: no comments, no trailing commas, no additional text.
 - "schemaVersion" must be "${SCHEMA_VERSION}".
 - Every question "id" must be unique across the document (e.g. "q1", "q2", …). Option ids must be unique within their question (e.g. "q1a", "q1b"); pair ids unique within their question (e.g. "q3p1").
 - Every id listed in "correctOptionIds" MUST exist in that question's "options".
 - "points" must be a number greater than 0. "durationMinutes" a whole number 1–600. "passingGrade" a number 0–100.
 - Put each question's complete wording in "text". Keep options short and unambiguous.
 
+EXAM CONFIGURATION — FILL IN BEFORE GENERATING
+- Number of questions: ${o.count}
+- Difficulty: ${o.difficulty}
+- Language: ${o.language}
+- Points per question: ${o.points}
+
 SCHEMA AND EXAMPLE (follow this structure exactly)
 ${JSON.stringify(TEMPLATE_JSON, null, 2)}
 
-Return the JSON now.`
+FINAL DELIVERY
+1. Validate the completed JSON against the exact schema.
+2. Save the result as a .json file.
+3. Attach the generated file so it can be downloaded.
+4. Do not substitute a text response, code block, or preview for the downloadable file.
+
+Return the downloadable JSON file now.`
 }
